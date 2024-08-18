@@ -3,7 +3,7 @@ import Input from "../components/Input/Input";
 import ImageUpload from "../components/ImageUpload";
 import MarkDownEditor from "../components/MarkdownEditor/MarkdownEditor";
 import TagInput from "../components/TagInput";
-import { useState } from "react";
+import {useState } from "react";
 import { Tag } from "react-tag-input";
 import WordPriceCounter from "../components/WordPriceCounter";
 import Button from "../components/Button/Button";
@@ -16,6 +16,8 @@ export default function PostForm() {
   const [body, setBody] = useState("")
   const [title, setTitle] = useState("")
 
+  const [imageUrl, setImageUrl] = useState('')
+  
   async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     
@@ -23,14 +25,14 @@ export default function PostForm() {
       body,
       title,
       tags: tags.map((tag) => tag.text),
-      imageUrl: "",
+      imageUrl
     };
 
     const insertedPost = await PostService.insertNewPost(newPost)
     
     info({
       title: "Post salvo com sucesso",
-      description: "Você acabou de criar o post com o ud " + insertedPost.id
+      description: "Você acabou de criar o post com o id " + insertedPost.id
     })
   }
 
@@ -43,7 +45,9 @@ export default function PostForm() {
         placeholder="e.g.: Como fiquei rico apredendo React"
       />
       
-      <ImageUpload label="Thumbnail do post" />
+      <ImageUpload
+        onImageUpload= {setImageUrl}
+        label="Thumbnail do post" />
       <MarkDownEditor
       onChange={setBody}
       />
