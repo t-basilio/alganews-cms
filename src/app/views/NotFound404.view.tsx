@@ -4,7 +4,7 @@ import Button from "../components/Button/Button";
 import { useHistory } from "react-router-dom";
 
 export default function NotFound404() {
-const history = useHistory()
+  const history = useHistory();
 
   return (
     <NotFound404Wrapper>
@@ -12,9 +12,10 @@ const history = useHistory()
       <h1>Não encontramos essa página</h1>
       <img src={NotFound} alt="Não encontrado" />
       <Button
-        variant="primary"
+        option="primary"
         label={"Ir para a home"}
-      onClick={()=> history.replace("/")}/>
+        onClick={() => history.replace("/")}
+      />
     </NotFound404Wrapper>
   );
 }

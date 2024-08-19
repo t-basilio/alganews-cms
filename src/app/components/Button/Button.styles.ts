@@ -43,24 +43,24 @@ const THEME = {
 };
 
 export const Wrapper = styled.button<{
-  variant: "danger" | "text" | "primary";
+  option: "danger" | "text" | "primary";
 }>`
-    padding: 6px 8px 4px;
-    border: 1px solid ${(p) => THEME[p.variant].bg};
+  padding: 6px 8px 4px;
+  border: 1px solid ${(p) => THEME[p.option].bg};
 
-    color: ${(p) => THEME[p.variant].color};
-    background-color: ${(p) => THEME[p.variant].bg};
+  color: ${(p) => THEME[p.option].color};
+  background-color: ${(p) => THEME[p.option].bg};
 
-    &:hover,
-    &:focus {
-        ${(p) => THEME[p.variant].onHover};
-    }
+  &:hover,
+  &:focus {
+    ${(p) => THEME[p.option].onHover};
+  }
 
-    &:disabled {
-      background-color: ${(p) => THEME[p.variant].disabled.bg};
-      color: ${(p) => THEME[p.variant].disabled.color};
+  &:disabled {
+    background-color: ${(p) => THEME[p.option].disabled.bg};
+    color: ${(p) => THEME[p.option].disabled.color};
 
-      pointer-events: none;
-      border-color: transparent;
-    } 
+    pointer-events: none;
+    border-color: transparent;
+  }
 `;

@@ -12,8 +12,8 @@ export default function Confirm(props: ConfirmProps) {
     <ConfirmWrapper>
       <ConfirmTitle>{props.title}</ConfirmTitle>
       <ConfirmButtonDisplay>
-        <Button variant="danger" label="Não" onClick={props.onCancel} />
-        <Button variant="primary" label="Sim" onClick={props.onConfirm} />
+        <Button option="danger" label="Não" onClick={props.onCancel} />
+        <Button option="primary" label="Sim" onClick={props.onConfirm} />
       </ConfirmButtonDisplay>
     </ConfirmWrapper>
   );

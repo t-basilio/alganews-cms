@@ -7,7 +7,7 @@ import FileService from "../../../sdk/services/File.service";
 
 export interface ImageUploadProps {
   label?: string;
-  onImageUpload: (imageUrl: string) => any
+  onImageUpload: (imageUrl: string) => any;
 }
 
 function ImageUpload(props: ImageUploadProps) {
@@ -19,11 +19,11 @@ function ImageUpload(props: ImageUploadProps) {
     if (file) {
       const reader = new FileReader();
 
-      reader.addEventListener("load", async e => {
+      reader.addEventListener("load", async (e) => {
         setFilePreview(String(e.target?.result));
-         
-        const imageUrl = await FileService.upload(file)
-        props.onImageUpload(imageUrl)
+
+        const imageUrl = await FileService.upload(file);
+        props.onImageUpload(imageUrl);
       });
 
       reader.readAsDataURL(file);
@@ -35,7 +35,7 @@ function ImageUpload(props: ImageUploadProps) {
       <UI.ImagePreviewWrapper>
         <UI.ImagePreview preview={filePreview}>
           <Button
-            variant={"primary"}
+            option={"primary"}
             label={
               <div>
                 Remover imagem
