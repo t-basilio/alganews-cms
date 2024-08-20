@@ -1,3 +1,6 @@
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import { transparentize } from "polished";
 import styled from "styled-components";
 import ProgressBar from "../components/ProgressBar/ProgressBar";
@@ -21,7 +24,20 @@ export default function EditorProfile(props: EditorProfileProps) {
     UserService.getExistingEditor(Number(params.id)).then(setEditor);
   }, [params.id]);
 
-  if (!editor) return null;
+  if (!editor)
+    return (
+      <EditorProfileWrapper>
+        <EditorHeadLine>
+          <Skeleton height={48} />
+          <Skeleton height={48} />
+        </EditorHeadLine>
+
+        <EditorFeatures>
+          <Skeleton height={200} />
+          <Skeleton height={200} />
+        </EditorFeatures>
+      </EditorProfileWrapper>
+    );
 
   return (
     <EditorProfileWrapper>

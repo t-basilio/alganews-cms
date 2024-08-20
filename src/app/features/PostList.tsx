@@ -1,3 +1,6 @@
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import { mdiOpenInNew } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useEffect, useMemo, useState } from "react";
@@ -9,8 +12,7 @@ import { format } from "date-fns";
 import withBoundary from "../../core/hoc/withBoundary";
 
 function PostList() {
-
-  const [posts, setPosts] = useState<Post.Paginated>()
+  const [posts, setPosts] = useState<Post.Paginated>();
   const [error, setError] = useState<Error>();
 
   useEffect(() => {
@@ -18,15 +20,14 @@ function PostList() {
       page: 0,
       size: 7,
       showAll: true,
-      sort:['createdAt', 'desc']
+      sort: ["createdAt", "desc"],
     })
       .then(setPosts)
-      .catch(error => setError(new Error(error.message)))
-  }, [])
+      .catch((error) => setError(new Error(error.message)));
+  }, []);
 
-  if (error)
-    throw error
-  
+  if (error) throw error;
+
   const columns = useMemo<Column<Post.Summary>[]>(
     () => [
       {
@@ -90,20 +91,38 @@ function PostList() {
       },
       {
         id: Math.random().toString(),
-        accessor: 'published',
+        accessor: "published",
         Header: () => <div style={{ textAlign: "right" }}>Ações</div>,
-        Cell: (props) => <div style={{ textAlign: "right" }}>
-          {
-            props? 'Publicado' : 'Privado'
-          }
-        </div>,
+        Cell: (props) => (
+          <div style={{ textAlign: "right" }}>
+            {props ? "Publicado" : "Privado"}
+          </div>
+        ),
       },
     ],
     []
   );
 
-  const instance = useTable<Post.Summary>({ data: posts?.content || [], columns });
+  const instance = useTable<Post.Summary>({
+    data: posts?.content || [],
+    columns,
+  });
 
+  if (!posts)
+    return (
+      <div>
+        <Skeleton height={32} />
+        
+        <Skeleton height={40} />
+        <Skeleton height={40} />
+        <Skeleton height={40} />
+        <Skeleton height={40} />
+        <Skeleton height={40} />
+        <Skeleton height={40} />
+        <Skeleton height={40} />
+      </div>
+    );
+  
   return <Table instance={instance} />;
 }
 

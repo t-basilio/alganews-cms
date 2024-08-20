@@ -1,3 +1,6 @@
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import styled from "styled-components";
 import Profile from "../components/Profile";
 import { useEffect, useState } from "react";
@@ -6,28 +9,34 @@ import UserService from "../../sdk/services/User.service";
 import getEditorDrescription from "../../sdk/utils/getEditorDescription";
 
 export default function EditorList() {
-  const [editors, setEditors] = useState<User.EditorSummary[]>([])
+  const [editors, setEditors] = useState<User.EditorSummary[]>([]);
 
   useEffect(() => {
-    UserService
-      .getAllEditors()
-      .then(setEditors);
-  }, [])
-  
+    UserService.getAllEditors().then(setEditors);
+  }, []);
+
+  if (!editors.length)
+    return (
+      <EditorListWrapper>
+        <Skeleton height={82} />
+        <Skeleton height={82} />
+        <Skeleton height={82} />
+      </EditorListWrapper>
+    );
+
   return (
     <EditorListWrapper>
-
-      {
-        editors.map((editor) => {
-          return <Profile key={editor.id}
+      {editors.map((editor) => {
+        return (
+          <Profile
+            key={editor.id}
             editorId={editor.id}
             name={editor.name}
-            description= { getEditorDrescription(new Date(editor.createdAt))}
+            description={getEditorDrescription(new Date(editor.createdAt))}
             avatarUrl={editor.avatarUrls.small}
           />
-        })
-      }
-      
+        );
+      })}
     </EditorListWrapper>
   );
 }
