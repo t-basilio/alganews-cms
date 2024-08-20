@@ -1,7 +1,7 @@
 import UsePageTitle from "../../core/hooks/UsePageTitle";
 import PostList from "../features/PostList";
 import UserEarnings from "../features/UserEarnings";
-import UserMetrics from "../features/UserPerformance";
+import UserPerformance from "../features/UserPerformance";
 import UserTopTags from "../features/UserTopTags";
 import DefaultLayout from "../layouts/Default/Default.layout";
 
@@ -18,11 +18,15 @@ export default function Home() {
           gap: 32,
         }}
       >
+        
         <UserTopTags />
         <UserEarnings />
       </div>
-      <UserMetrics />
+
+      <UserPerformance />
+      
       <PostList />
+      
     </DefaultLayout>
   );
 }

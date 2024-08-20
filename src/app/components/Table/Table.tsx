@@ -10,15 +10,21 @@ export default function Table<T extends Object>({
 }) {
   const { getTableProps, getTableBodyProps, prepareRow, headerGroups, rows } =
     instance;
-
   return (
     <>
-      <T.Wrapper cellPadding={0} cellSpacing={0} {...getTableProps()}>
+      <T.Wrapper
+        cellPadding={0}
+        cellSpacing={0}
+        {...getTableProps()}
+      >
         <T.Heading>
-          {headerGroups.map((headerGroup) => (
-            <T.HeadingRow {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <T.HeadingCell {...column.getHeaderProps()}>
+          {headerGroups.map((headerGroup, i) => (
+            <T.HeadingRow
+              {...headerGroup.getHeaderGroupProps()}
+              key={i}
+            >
+              {headerGroup.headers.map((column, i) => (
+                <T.HeadingCell {...column.getHeaderProps()} key={i}>
                   {column.render("Header")}
                 </T.HeadingCell>
               ))}
@@ -26,13 +32,13 @@ export default function Table<T extends Object>({
           ))}
         </T.Heading>
         <T.Body {...getTableBodyProps()}>
-          {rows.map((row) => {
+          {rows.map((row, i) => {
             prepareRow(row);
             return (
-              <T.BodyRow {...row.getRowProps()}>
-                {row.cells.map((cell) => {
+              <T.BodyRow {...row.getRowProps()} key={i}>
+                {row.cells.map((cell, i) => {
                   return (
-                    <T.BodyCell {...cell.getCellProps()}>
+                    <T.BodyCell {...cell.getCellProps()} key={i}>
                       {cell.render("Cell")}
                     </T.BodyCell>
                   );

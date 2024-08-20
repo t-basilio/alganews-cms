@@ -14,41 +14,39 @@ interface EditorProfileProps {
 }
 
 export default function EditorProfile(props: EditorProfileProps) {
-
   const params = useParams<{ id: string }>();
-  const [editor, setEditor] = useState<User.EditorDetailed>()
+  const [editor, setEditor] = useState<User.EditorDetailed>();
 
   useEffect(() => {
-    UserService
-      .getExistingEditor(Number(params.id))
-    .then(setEditor)
-  }, [params.id])
+    UserService.getExistingEditor(Number(params.id)).then(setEditor);
+  }, [params.id]);
 
-  if (!editor) 
-    return null
-  
+  if (!editor) return null;
+
   return (
     <EditorProfileWrapper>
       <EditorHeadLine>
-        <Avatar src={ editor.avatarUrls.small } />
-        <Name>{ editor.name }</Name>
-        <Description>{ getEditorDrescription(new Date(editor.createdAt)) }</Description>
+        <Avatar src={editor.avatarUrls.small} />
+        <Name>{editor.name}</Name>
+        <Description>
+          {getEditorDrescription(new Date(editor.createdAt))}
+        </Description>
       </EditorHeadLine>
       <Divisor />
       <EditorFeatures>
         <PersonalInfo>
-          <Biography>
-            { editor.bio }
-          </Biography>
+          <Biography>{editor.bio}</Biography>
           <Skills>
-            {
-              editor.skills?.map(skill => {
-                return <ProgressBar
-                  progress={skill.percentage}
+            {editor.skills?.map((skill, i) => {
+              return (
+                <ProgressBar
+                  key={i}
+                  level={skill.percentage}
                   skill={skill.name}
-                  theme='primary'
+                  theme="primary"
                 />
-            }) }
+              );
+            })}
           </Skills>
         </PersonalInfo>
         <ContactInfo>

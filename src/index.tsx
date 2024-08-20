@@ -13,6 +13,7 @@ import EditorProfileView from "./app/views/EditorProfile.view";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <BrowserRouter>

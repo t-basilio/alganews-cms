@@ -5,7 +5,6 @@ import Service from "./Service";
 class PostService extends Service {
   static getAllPosts(search: Post.Query) {
     const queryString = generateQueryString(search)
-    console.log(queryString)
     return this.Http.get<Post.Paginated>("/posts".concat(queryString)).then(this.getData);
   }
 

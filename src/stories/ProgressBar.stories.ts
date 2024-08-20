@@ -18,7 +18,7 @@ export const Primary: Story = {
   args: {
     theme: "primary",
     skill: "C#",
-    progress: 50,
+    level: 50,
     width: 375,
   },
 };
@@ -27,7 +27,7 @@ export const Secondary: Story = {
   args: {
     theme: "secondary",
     skill: "C++",
-    progress: 50,
+    level: 50,
     width: 375,
   },
 };
@@ -36,7 +36,7 @@ export const Complete: Story = {
   args: {
     theme: "primary",
     skill: "Java",
-    progress: 100,
+    level: 100,
     width: 375,
   },
 };
@@ -45,7 +45,7 @@ export const ZeroProgress: Story = {
   args: {
     theme: "secondary",
     skill: "Python",
-    progress: 0,
+    level: 0,
     width: 375,
   },
 };
@@ -54,7 +54,7 @@ export const ProgressInHalfOfText: Story = {
   args: {
     theme: "primary",
     skill: "JavaScript",
-    progress: 10,
+    level: 10,
     width: 375,
   },
 };

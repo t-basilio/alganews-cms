@@ -7,7 +7,7 @@ const meta = {
   component: CircleChart,
   tags: ["autodocs"],
   argTypes: {
-    progress: {
+    level: {
       control: {
         type: "range",
         min: 0,
@@ -23,7 +23,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     theme: "primary",
-    progress: 10,
+    level: 10,
     size: 250,
     caption: "Mobile",
   },
@@ -31,7 +31,7 @@ export const Primary: Story = {
 
 export const Default: Story = {
   args: {
-    progress: 0,
+    level: 0,
     size: 150,
     caption: "web",
   },

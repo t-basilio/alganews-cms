@@ -1,6 +1,6 @@
 import Service from "./Service";
 import { File } from "../@types";
-import { v4 as uuid } from "uuid";
+import { v4 as uuid } from 'uuid'
 
 class FileService extends Service {
 

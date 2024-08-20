@@ -4,17 +4,17 @@ import styled from "styled-components";
 export interface ProgressBarProps {
   theme: "primary" | "secondary";
   skill: string;
-  progress: number;
+  level: number;
   width?: number;
 }
 
 export default function ProgressBar(props: ProgressBarProps) {
   return (
     <ProgressBarWrapper style={{ width: props.width || "auto" }}>
-      <TextShadow progress={props.progress} theme={props.theme}>
+      <TextShadow level={props.level} theme={props.theme}>
         {props.skill}
       </TextShadow>
-      <CurrentProgress progress={props.progress} theme={props.theme}>
+      <CurrentProgress level={props.level} theme={props.theme}>
         <span>{props.skill}</span>
       </CurrentProgress>
     </ProgressBarWrapper>
@@ -29,7 +29,7 @@ const ProgressBarWrapper = styled.div`
 `;
 
 const TextShadow = styled.span<{
-  progress: number;
+  level: number;
   theme: "primary" | "secondary";
 }>`
   position: absolute;
@@ -49,7 +49,7 @@ const TextShadow = styled.span<{
 `;
 
 const CurrentProgress = styled.div<{
-  progress: number;
+  level: number;
   theme: "primary" | "secondary";
 }>`
   position: relative;
@@ -58,8 +58,8 @@ const CurrentProgress = styled.div<{
   align-items: center;
   height: 100%;
   max-width: 100%;
-  width: ${(p) => p.progress}%;
-  ${(p) => (p.progress > 0 ? "padding-left: 4px;" : "")}
+  width: ${(p) => p.level}%;
+  ${(p) => (p.level > 0 ? "padding-left: 4px;" : "")}
 
   font-size: 14px;
   text-transform: lowercase;

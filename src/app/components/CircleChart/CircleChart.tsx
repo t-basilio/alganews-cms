@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 export interface CircleChartProps {
   size: number;
-  progress: number;
+  level: number;
   caption?: string;
   theme?: "primary" | "default";
   strokeWidth?: number;
@@ -28,9 +28,9 @@ function CircleChart(props: CircleChartProps) {
 
   // observador para animar o offset
   useEffect(() => {
-    const progressOffset = ((100 - props.progress) / 100) * CIRCUMFERENCE;
-    setOffset(progressOffset);
-  }, [setOffset, CIRCUMFERENCE, props.progress, offset]);
+    const levelOffset = ((100 - props.level) / 100) * CIRCUMFERENCE;
+    setOffset(levelOffset);
+  }, [setOffset, CIRCUMFERENCE, props.level, offset]);
 
   return (
     <CC.Wrapper>
@@ -48,7 +48,7 @@ function CircleChart(props: CircleChartProps) {
             strokeDashoffset={offset}
           />
         </CC.Svg>
-        <CC.Percentage color={THEME}>{Math.ceil(props.progress)}%</CC.Percentage>
+        <CC.Percentage color={THEME}>{Math.ceil(props.level)}%</CC.Percentage>
       </CC.SvgWrapper>
       {props.caption && <CC.Caption>{props.caption}</CC.Caption>}
     </CC.Wrapper>
