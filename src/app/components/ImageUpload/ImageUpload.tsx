@@ -4,6 +4,7 @@ import { mdiDelete, mdiUpload } from "@mdi/js";
 import { ChangeEvent, useState } from "react";
 import Button from "../Button/Button";
 import FileService from "../../../sdk/services/File.service";
+import Loading from "../Loading";
 
 export interface ImageUploadProps {
   label?: string;
@@ -11,8 +12,10 @@ export interface ImageUploadProps {
 }
 
 function ImageUpload(props: ImageUploadProps) {
-  const [filePreview, setFilePreview] = useState<string | null>(null);
 
+  const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [pushing, setPushing] = useState(false);
+  
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files![0];
 
@@ -20,19 +23,25 @@ function ImageUpload(props: ImageUploadProps) {
       const reader = new FileReader();
 
       reader.addEventListener("load", async (e) => {
-        setFilePreview(String(e.target?.result));
+        try {
+          setPushing(true);
+          setFilePreview(String(e.target?.result));
+          const imageUrl = await FileService.upload(file);
 
-        const imageUrl = await FileService.upload(file);
-        props.onImageUpload(imageUrl);
-      });
-
+          props.onImageUpload(imageUrl);
+        } finally {
+          setPushing(false);
+        }
+      })
       reader.readAsDataURL(file);
     }
+
   }
 
   if (filePreview) {
     return (
       <UI.ImagePreviewWrapper>
+        <Loading show={pushing} />
         <UI.ImagePreview preview={filePreview}>
           <Button
             option={"primary"}
@@ -48,14 +57,15 @@ function ImageUpload(props: ImageUploadProps) {
       </UI.ImagePreviewWrapper>
     );
   }
-
   return (
     <UI.Wrapper>
+      <Loading show={pushing} />
+      
       <UI.Label>
         <Icon size={"24px"} path={mdiUpload} />
 
         {props.label}
-        <UI.Input type="file" onChange={handleChange} />
+        <UI.Input type="file" onChange={ handleChange } />
       </UI.Label>
     </UI.Wrapper>
   );

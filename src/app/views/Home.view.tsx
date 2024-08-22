@@ -10,6 +10,7 @@ export default function Home() {
 
   return (
     <DefaultLayout>
+
       <div
         style={{
           display: "grid",

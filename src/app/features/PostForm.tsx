@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Loading from "../components/Loading";
 import Input from "../components/Input/Input";
 import ImageUpload from "../components/ImageUpload";
 import MarkDownEditor from "../components/MarkdownEditor/MarkdownEditor";
@@ -11,33 +12,46 @@ import countWordsInMarkdown from "../../core/utils/countWordsInMarkdown";
 import info from "../../core/utils/info";
 import PostService from "../../sdk/services/Post.service";
 
+
 export default function PostForm() {
+
   const [tags, setTags] = useState<Tag[]>([]);
   const [body, setBody] = useState("");
   const [title, setTitle] = useState("");
-
   const [imageUrl, setImageUrl] = useState("");
+
+  const [publishing, setPublishing] = useState(false);
 
   async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const newPost = {
-      body,
-      title,
-      tags: tags.map((tag) => tag.text),
-      imageUrl,
-    };
+    try { 
+      setPublishing(true);
 
-    const insertedPost = await PostService.insertNewPost(newPost);
+      const newPost = {
+        body,
+        title,
+        tags: tags.map((tag) => tag.text),
+        imageUrl,
+      };
 
-    info({
-      title: "Post salvo com sucesso",
-      description: "Você acabou de criar o post com o id " + insertedPost.id,
-    });
+      const insertedPost = await PostService.insertNewPost(newPost);
+
+      info({
+        title: "Post salvo com sucesso",
+        description: "Você acabou de criar o post com o id " + insertedPost.id,
+      });
+    }
+    finally { 
+      setPublishing(false);
+    }
   }
 
   return (
     <PostFormWrapper onSubmit={handleFormSubmit}>
+      
+      <Loading show={ publishing } />
+
       <Input
         label="título"
         value={title}
