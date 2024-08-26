@@ -4,16 +4,22 @@ import Input from "../components/Input/Input";
 import ImageUpload from "../components/ImageUpload";
 import MarkDownEditor from "../components/MarkdownEditor/MarkdownEditor";
 import TagInput from "../components/TagInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tag } from "react-tag-input";
 import WordPriceCounter from "../components/WordPriceCounter";
 import Button from "../components/Button/Button";
 import countWordsInMarkdown from "../../core/utils/countWordsInMarkdown";
 import info from "../../core/utils/info";
 import PostService from "../../sdk/services/Post.service";
+import { useHistory } from "react-router-dom";
 
 
-export default function PostForm() {
+interface PostFormProps {
+  postId?: number
+}
+
+export default function PostForm(props: PostFormProps) {
+  const history = useHistory()
 
   const [tags, setTags] = useState<Tag[]>([]);
   const [body, setBody] = useState("");
@@ -22,35 +28,65 @@ export default function PostForm() {
 
   const [publishing, setPublishing] = useState(false);
 
+  const newPost = {
+    body,
+    title,
+    imageUrl,
+    tags: tags.map((tag) => tag.text),
+  };
+
+  async function insertNewPost() {
+    await PostService.insertNewPost(newPost);
+    return 'salvo'
+  }
+
+  async function updateExistingPost(postId: number) {
+    await PostService.updateExistingPost(postId, newPost)
+    return 'atualizado'
+  }
+
   async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    try { 
+    try {
       setPublishing(true);
-
-      const newPost = {
-        body,
-        title,
-        tags: tags.map((tag) => tag.text),
-        imageUrl,
-      };
-
-      const insertedPost = await PostService.insertNewPost(newPost);
+      e.preventDefault();
+      
+      const action = props.postId
+        ? await updateExistingPost(props.postId)
+        : await insertNewPost();
 
       info({
-        title: "Post salvo com sucesso",
-        description: "Você acabou de criar o post com o id " + insertedPost.id,
+        title: `Post ${action} com sucesso`,
+        description: `Seu post acabou de ser ${action}`,
       });
-    }
-    finally { 
+
+      history.push('/')
+     
+    } finally {
       setPublishing(false);
     }
   }
 
+  function fetchPost(postId: number) {
+    PostService
+      .getExistingPost(postId)
+      .then(post => {
+        setTitle(post.title)
+        setImageUrl(post.imageUrls.default)
+        setBody(post.body)
+        setTags(post.tags.map(tag => ({id: tag, text: tag})))
+    })
+  }
+
+  useEffect(() => {
+
+    if (props.postId)
+      fetchPost(props.postId)
+
+  },[props.postId])
+
   return (
     <PostFormWrapper onSubmit={handleFormSubmit}>
-      
-      <Loading show={ publishing } />
+      <Loading show={publishing} />
 
       <Input
         label="título"
@@ -59,8 +95,16 @@ export default function PostForm() {
         placeholder="e.g.: Como fiquei rico apredendo React"
       />
 
-      <ImageUpload onImageUpload={setImageUrl} label="Thumbnail do post" />
-      <MarkDownEditor onChange={setBody} />
+      <ImageUpload
+        onImageUpload={setImageUrl}
+        label="Thumbnail do post"
+        preview={imageUrl}
+      />
+      <MarkDownEditor
+        onChange={setBody}
+        value={body}
+      />
+      
       <TagInput
         tags={tags}
         onAdd={(tag) => setTags([...tags, tag])}
@@ -72,7 +116,11 @@ export default function PostForm() {
           pricePerWord={0.1}
           wordsCount={countWordsInMarkdown(body)}
         />
-        <Button option="primary" label={"Salvar post"} type="submit" />
+        <Button
+          option="primary"
+          label={"Salvar post"}
+          type="submit"
+          disabled={ !title || !imageUrl || !body || !tags.length} />
       </PostFormSubmitWrapper>
     </PostFormWrapper>
   );

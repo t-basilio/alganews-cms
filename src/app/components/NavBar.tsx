@@ -16,7 +16,7 @@ export default function NavBar() {
           </NavLink>
         </Item>
         <Item>
-          <NavLink exact to="/post/criar">
+          <NavLink exact to="/posts/criar">
             Novo post
           </NavLink>
         </Item>

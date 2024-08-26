@@ -29,3 +29,40 @@ export const BodyCell = styled.td`
   font-weight: 500;
   padding: 0 8px;
 `;
+
+export const TablePagination = styled.div`
+  display: flex;
+  gap: 8px;
+
+  ul {
+    display: flex;
+    list-style: none;
+    gap: 8px;
+
+    li {
+      a {
+        text-align: center;
+        cursor: pointer;
+        background-color: #09f;
+        color: #fff;
+        padding: 4px 8px;
+        display: block;
+
+        transition: all.25 ease;
+
+        &:hover,
+        &:focus {
+          box-shadow: 0 6px 6px rgba(0,0,0,.15);
+          transform: translateY(-3px);
+        }
+      }
+
+      &.selected a,
+      &.disabled a {
+        background-color: #ccc;
+        color: #222;
+        pointer-events: none;
+      }
+    }
+  }
+`

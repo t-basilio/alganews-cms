@@ -3,8 +3,8 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import Info from "../../app/components/Info/info";
 
 interface InfoProps {
-  title: string;
-  description: string;
+  title: string
+  description: string
 }
 
 export default function info(props: InfoProps) {
