@@ -4,9 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import styled from "styled-components";
 import Profile from "../components/Profile";
 import { useEffect, useState } from "react";
-import { User } from "../../sdk/@types";
-import UserService from "../../sdk/services/User.service";
-import getEditorDrescription from "../../sdk/utils/getEditorDescription";
+import { UserService, User, getEditorDescription } from "t-basilio-sdk";
 
 export default function EditorList() {
   const [editors, setEditors] = useState<User.EditorSummary[]>([]);
@@ -32,7 +30,7 @@ export default function EditorList() {
             key={editor.id}
             editorId={editor.id}
             name={editor.name}
-            description={getEditorDrescription(new Date(editor.createdAt))}
+            description={getEditorDescription(new Date(editor.createdAt))}
             avatarUrl={editor.avatarUrls.small}
           />
         );

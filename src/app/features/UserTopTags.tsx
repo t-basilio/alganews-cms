@@ -4,8 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import styled from "styled-components";
 import CircleChart from "../components/CircleChart";
 import { useEffect, useState } from "react";
-import { Metric } from "../../sdk/@types";
-import MetricService from "../../sdk/services/Metric.service";
+import { MetricService, Metric } from "t-basilio-sdk";
 import withBoundary from "../../core/hoc/withBoundary";
 
 function UserTopTags() {

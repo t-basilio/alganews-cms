@@ -3,7 +3,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 import { useEffect, useState } from "react";
 import Chart, { ChartProps } from "../components/Chart/Chart";
-import MetricService from "../../sdk/services/Metric.service";
+import { MetricService } from "t-basilio-sdk";
 import transformEditorMonthlyEarningsToChartJs from "../../core/utils/transformEditorMonthlyEarningsToChartJs";
 import withBoundary from "../../core/hoc/withBoundary";
 

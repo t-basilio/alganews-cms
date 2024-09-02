@@ -7,10 +7,9 @@ import ProgressBar from "../components/ProgressBar/ProgressBar";
 import FieldDescriptor from "../components/FieldDescriptor/FieldDescriptor";
 import ValueDescriptor from "../components/ValueDescriptor/ValueDescriptor";
 import { useEffect, useState } from "react";
-import { User } from "../../sdk/@types";
-import UserService from "../../sdk/services/User.service";
 import { useParams } from "react-router";
-import getEditorDrescription from "../../sdk/utils/getEditorDescription";
+import { UserService, getEditorDescription, User } from "t-basilio-sdk";
+
 
 interface EditorProfileProps {
   hidePersonalData?: boolean;
@@ -45,7 +44,7 @@ export default function EditorProfile(props: EditorProfileProps) {
         <Avatar src={editor.avatarUrls.small} />
         <Name>{editor.name}</Name>
         <Description>
-          {getEditorDrescription(new Date(editor.createdAt))}
+          {getEditorDescription(new Date(editor.createdAt))}
         </Description>
       </EditorHeadLine>
       <Divisor />

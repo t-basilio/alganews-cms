@@ -3,8 +3,8 @@ import * as UI from "./ImageUpload.styles";
 import { mdiDelete, mdiUpload } from "@mdi/js";
 import { ChangeEvent, useEffect, useState } from "react";
 import Button from "../Button/Button";
-import FileService from "../../../sdk/services/File.service";
 import Loading from "../Loading";
+import services from "t-basilio-sdk";
 
 export interface ImageUploadProps {
   label: string;
@@ -27,7 +27,7 @@ function ImageUpload(props: ImageUploadProps) {
         try {
           setPushing(true);
           setFilePreview(String(e.target?.result));
-          const imageUrl = await FileService.upload(file);
+          const imageUrl = await services.services.FileService.upload(file);
 
           props.onImageUpload(imageUrl);
         } finally {

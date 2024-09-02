@@ -11,6 +11,7 @@ import info from "../core/utils/info";
 
 export default function App() {
 
+
   useEffect(() => {
       window.onunhandledrejection = function (error) {
         

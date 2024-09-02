@@ -4,8 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import styled from "styled-components";
 import ValueDescriptor from "../components/ValueDescriptor/ValueDescriptor";
 import { useEffect, useState } from "react";
-import { User } from "../../sdk/@types";
-import UserService from "../../sdk/services/User.service";
+import { UserService, User } from "t-basilio-sdk";
 import withBoundary from "../../core/hoc/withBoundary";
 
 function UserEarnings() {

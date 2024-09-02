@@ -10,7 +10,7 @@ import WordPriceCounter from "../components/WordPriceCounter";
 import Button from "../components/Button/Button";
 import countWordsInMarkdown from "../../core/utils/countWordsInMarkdown";
 import info from "../../core/utils/info";
-import PostService from "../../sdk/services/Post.service";
+import { PostService } from "t-basilio-sdk";
 import { useHistory } from "react-router-dom";
 
 
