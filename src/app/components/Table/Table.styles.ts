@@ -27,7 +27,8 @@ export const BodyCell = styled.td`
   height: 40px;
   font-size: 12px;
   font-weight: 500;
-  padding: 0 8px;
+  text-align: center;
+  padding: 8px;
 `;
 
 export const TablePagination = styled.div`
@@ -43,26 +44,28 @@ export const TablePagination = styled.div`
       a {
         text-align: center;
         cursor: pointer;
-        background-color: #09f;
-        color: #fff;
+        background-color: #fff;
+        color: #274060;
+        border: solid 1px ${transparentize(0.5, "#ccc")};
         padding: 4px 8px;
         display: block;
 
-        transition: all.25 ease;
+        transition: all 0.1s ease;
 
         &:hover,
         &:focus {
-          box-shadow: 0 6px 6px rgba(0,0,0,.15);
+          box-shadow: 0 6px 6px rgba(0, 0, 0, 0.15);
           transform: translateY(-3px);
         }
       }
 
       &.selected a,
       &.disabled a {
-        background-color: #ccc;
-        color: #222;
+        background-color: #09f;
+        color: #fff;
+        border: solid 1px #08f;
         pointer-events: none;
       }
     }
   }
-`
+`;

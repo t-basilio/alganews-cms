@@ -1,19 +1,19 @@
+import { getEditorDescription } from "t-basilio-sdk";
+import { useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
 import styled from "styled-components";
+import useEditors from "../../core/hooks/useEditors";
 import Profile from "../components/Profile";
-import { useEffect, useState } from "react";
-import { UserService, User, getEditorDescription } from "t-basilio-sdk";
 
 export default function EditorList() {
-  const [editors, setEditors] = useState<User.EditorSummary[]>([]);
+  const { editorsList, loading, fetchAllEditors } = useEditors();
 
   useEffect(() => {
-    UserService.getAllEditors().then(setEditors);
-  }, []);
+    fetchAllEditors();
+  }, [fetchAllEditors]);
 
-  if (!editors.length)
+  if (!editorsList.length)
     return (
       <EditorListWrapper>
         <Skeleton height={82} />
@@ -24,7 +24,7 @@ export default function EditorList() {
 
   return (
     <EditorListWrapper>
-      {editors.map((editor) => {
+      {editorsList.map((editor) => {
         return (
           <Profile
             key={editor.id}
@@ -35,6 +35,7 @@ export default function EditorList() {
           />
         );
       })}
+      { loading ? 'buscando informações' : null }
     </EditorListWrapper>
   );
 }

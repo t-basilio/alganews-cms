@@ -6,10 +6,10 @@ import styled from "styled-components";
 import ProgressBar from "../components/ProgressBar/ProgressBar";
 import FieldDescriptor from "../components/FieldDescriptor/FieldDescriptor";
 import ValueDescriptor from "../components/ValueDescriptor/ValueDescriptor";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router";
-import { UserService, getEditorDescription, User } from "t-basilio-sdk";
-
+import { getEditorDescription } from "t-basilio-sdk";
+import useSingleEditor from "../../core/hooks/useSingleEditor";
 
 interface EditorProfileProps {
   hidePersonalData?: boolean;
@@ -17,11 +17,11 @@ interface EditorProfileProps {
 
 export default function EditorProfile(props: EditorProfileProps) {
   const params = useParams<{ id: string }>();
-  const [editor, setEditor] = useState<User.EditorDetailed>();
+  const { editor, fetchEditor } = useSingleEditor();
 
   useEffect(() => {
-    UserService.getExistingEditor(Number(params.id)).then(setEditor);
-  }, [params.id]);
+    fetchEditor(Number(params.id));
+  }, [fetchEditor, params.id]);
 
   if (!editor)
     return (
@@ -52,10 +52,10 @@ export default function EditorProfile(props: EditorProfileProps) {
         <PersonalInfo>
           <Biography>{editor.bio}</Biography>
           <Skills>
-            {editor.skills?.map((skill, i) => {
+            {editor.skills?.map((skill) => {
               return (
                 <ProgressBar
-                  key={i}
+                  key={skill.name}
                   level={skill.percentage}
                   skill={skill.name}
                   theme="primary"

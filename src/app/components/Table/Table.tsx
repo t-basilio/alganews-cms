@@ -1,7 +1,7 @@
 import { TableInstance } from "react-table";
 import * as T from "./Table.styles";
 import NoData from "../NoData/NoData";
-import { size, transparentize } from "polished";
+import { transparentize } from "polished";
 import { useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import Icon from "@mdi/react";

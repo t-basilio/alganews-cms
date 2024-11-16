@@ -3,19 +3,16 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 import styled from "styled-components";
 import CircleChart from "../components/CircleChart";
-import { useEffect, useState } from "react";
-import { MetricService, Metric } from "t-basilio-sdk";
+import { useEffect } from "react";
 import withBoundary from "../../core/hoc/withBoundary";
+import useUserTopTags from "../../core/hooks/useTopTags";
 
 function UserTopTags() {
-  const [topTags, setTopTags] = useState<Metric.EditorTagRatio>([]);
-  const [error, setError] = useState<Error>();
-
+  const { topTags, fetchTopTags } = useUserTopTags();
+  
   useEffect(() => {
-    MetricService.getTop3Teags()
-      .then(setTopTags)
-      .catch((error) => setError(new Error(error.message)));
-  }, []);
+    fetchTopTags()
+  }, [fetchTopTags]);
 
   if (!topTags.length)
     return (
@@ -25,8 +22,6 @@ function UserTopTags() {
         <Skeleton height={88} width={88} circle />
       </UserTopTagsWrapper>
     );
-
-  if (error) throw error;
 
   return (
     <UserTopTagsWrapper>

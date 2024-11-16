@@ -1,4 +1,4 @@
-import usePageTitle from "../../core/hooks/UsePageTitle";
+import usePageTitle from "../../core/hooks/usePageTitle";
 import DefaultLayout from "../layouts/Default";
 import EditorProfile from "../features/EditorProfile";
 import ErrorBoundary from "../components/ErrorBoundary";

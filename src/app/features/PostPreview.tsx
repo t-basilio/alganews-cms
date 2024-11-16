@@ -2,29 +2,18 @@ import styled from "styled-components";
 import withBoundary from "../../core/hoc/withBoundary";
 import MarkDownEditor from "../components/MarkdownEditor/MarkdownEditor";
 import Button from "../components/Button/Button";
-import { useEffect, useState } from "react";
-import { PostService, Post } from "t-basilio-sdk";
+import { useEffect } from "react";
 import Loading from "../components/Loading";
-import info from "../../core/utils/info";
 import confirm from "../../core/utils/confirm";
 import { modal } from "../../core/utils/modal";
+import useSinglePost from "../../core/hooks/useSinglePost";
 
 interface PostPreviewProps {
   postId: number;
 }
 
 function PostPreview(props: PostPreviewProps) {
-
-  const [post, setPost] = useState<Post.Detailed>();
-  const [loading, setLoading] = useState(false);
-
-  async function publishPost() {
-    await PostService.publishExistingPost(props.postId);
-    info({
-      title: "Post publicado",
-      description: "Você publicou o post com sucesso",
-    });
-  }
+  const { post, loading, publishPost, fetchPost } = useSinglePost();
 
   function reopenModal() {
     modal({
@@ -33,11 +22,8 @@ function PostPreview(props: PostPreviewProps) {
   }
 
   useEffect(() => {
-    setLoading(true);
-    PostService.getExistingPost(props.postId)
-      .then(setPost)
-      .finally(() => setLoading(false));
-  }, [props.postId]);
+    fetchPost(props.postId);
+  }, [fetchPost, props.postId]);
 
   if (loading) return <Loading show />;
 
@@ -64,7 +50,9 @@ function PostPreview(props: PostPreviewProps) {
             option="primary"
             label={"Editar"}
             disabled={post.published}
-            onClick={() => window.location.pathname = `/posts/editar/${props.postId}`}
+            onClick={() =>
+              (window.location.pathname = `/posts/editar/${props.postId}`)
+            }
           />
         </PostPreviewActions>
       </PostPreviewHeading>

@@ -3,21 +3,16 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 import styled from "styled-components";
 import ValueDescriptor from "../components/ValueDescriptor/ValueDescriptor";
-import { useEffect, useState } from "react";
-import { UserService, User } from "t-basilio-sdk";
+import { useEffect } from "react";
 import withBoundary from "../../core/hoc/withBoundary";
+import useUser from "../../core/hooks/useUser";
 
 function UserEarnings() {
-  const [user, setUser] = useState<User.Detailed>();
-  const [error, setError] = useState<Error>();
+  const { user, fetchUser} = useUser();
 
   useEffect(() => {
-    UserService.getDetailedUser(7)
-      .then(setUser)
-      .catch((error) => setError(new Error(error.message)));
-  }, []);
-
-  if (error) throw error;
+      fetchUser()
+  }, [fetchUser]);
 
   if (!user)
     return (

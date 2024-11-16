@@ -6,38 +6,29 @@ import Icon from "@mdi/react";
 import { useEffect, useMemo, useState } from "react";
 import { Column, usePagination, useTable } from "react-table";
 import Table from "../components/Table/Table";
-import { PostService, Post } from "t-basilio-sdk";
+import { Post } from "t-basilio-sdk";
 import { format } from "date-fns";
-import withBoundary from "../../core/hoc/withBoundary";
 import Loading from "../components/Loading";
 import PostPreview from "./PostPreview";
 import { modal } from "../../core/utils/modal";
 import PostTitleLinkAnchor from "../components/PostTitleLinkAnchor";
+import { usePosts } from "../../core/hooks/usePosts";
 
 
-function PostList() {
-  const [posts, setPosts] = useState<Post.Paginated>();
-  const [error, setError] = useState<Error>();
+export default function PostList() {
+
+  const {paginatedPosts, loading, fetchPosts } = usePosts()
   const [page, setPage] = useState(0)
-  const [loading, setLoading] = useState(false)
   
   useEffect(() => {
-    setLoading(true)
     
-    PostService.getAllPosts({
+    fetchPosts({
       page,
       size: 7,
       showAll: true,
       sort: ["createdAt", "desc"],
-    })
-      .then(setPosts)
-      .catch((error) => setError(new Error(error.message)))
-      .finally(() => {
-        setLoading(false)
-      })
-  }, [page]);
-
-  if (error) throw error;
+    })      
+  }, [fetchPosts, page]);
 
   const columns = useMemo<Column<Post.Summary>[]>(
     () => [
@@ -57,7 +48,7 @@ function PostList() {
               display: "flex",
               gap: 8,
               alignItems: "center",
-              maxWidth: 270
+              maxWidth: 420
             }}
           >
             <img
@@ -97,22 +88,6 @@ function PostList() {
         ),
       },
       {
-        Header: () => (
-          <div style={{ textAlign: "right" }}>Ultima Atualização</div>
-        ),
-        accessor: "updatedAt",
-        Cell: (props) => (
-          <div
-            style={{
-              textAlign: "right",
-              fontFamily: '"Roboto mono", monospace',
-            }}
-          >
-            {format(new Date(props.value), "dd/MM/yyyy")}
-          </div>
-        ),
-      },
-      {
         id: Math.random().toString(),
         accessor: "published",
         Header: () => <div style={{ textAlign: "right" }}>Ações</div>,
@@ -127,16 +102,16 @@ function PostList() {
   );
 
   const instance = useTable<Post.Summary>({
-    data: posts?.content || [],
+    data: paginatedPosts?.content || [],
     columns,
     manualPagination: true,
     initialState: { pageIndex: 0 },
-    pageCount: posts?.totalPages
+    pageCount: paginatedPosts?.totalPages
   },
     usePagination
   );
 
-  if (!posts)
+  if (!paginatedPosts)
     return (
       <div>
         <Skeleton height={32} />
@@ -158,5 +133,3 @@ function PostList() {
     </>
   );
 }
-
-export default withBoundary(PostList, "lista de posts");
