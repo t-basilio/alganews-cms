@@ -5,7 +5,7 @@ interface ModalProps {
  children: React.ReactNode;
 }
 
-export function modal(props: ModalProps) {
+export default function modal(props: ModalProps) {
     setTimeout(() => {
         confirmAlert({
             overlayClassName: 'modal-overlay',

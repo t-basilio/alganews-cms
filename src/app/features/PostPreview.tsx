@@ -1,11 +1,11 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 import withBoundary from "../../core/hoc/withBoundary";
-import MarkDownEditor from "../components/MarkdownEditor/MarkdownEditor";
 import Button from "../components/Button/Button";
-import { useEffect } from "react";
+import MarkdownEditor from "../components/MarkdownEditor/MarkdownEditor";
 import Loading from "../components/Loading";
 import confirm from "../../core/utils/confirm";
-import { modal } from "../../core/utils/modal";
+import modal from "../../core/utils/modal";
 import useSinglePost from "../../core/hooks/useSinglePost";
 
 interface PostPreviewProps {
@@ -13,7 +13,7 @@ interface PostPreviewProps {
 }
 
 function PostPreview(props: PostPreviewProps) {
-  const { post, loading, publishPost, fetchPost } = useSinglePost();
+  const { fetchPost, loading, post, publishPost } = useSinglePost(props.postId);
 
   function reopenModal() {
     modal({
@@ -35,7 +35,7 @@ function PostPreview(props: PostPreviewProps) {
         <PostPreviewTitle>{post.title}</PostPreviewTitle>
         <PostPreviewActions>
           <Button
-            option="danger"
+            option={"danger"}
             label={"Publicar"}
             disabled={post.published}
             onClick={() => {
@@ -47,7 +47,7 @@ function PostPreview(props: PostPreviewProps) {
             }}
           />
           <Button
-            option="primary"
+            option={"primary"}
             label={"Editar"}
             disabled={post.published}
             onClick={() =>
@@ -56,11 +56,9 @@ function PostPreview(props: PostPreviewProps) {
           />
         </PostPreviewActions>
       </PostPreviewHeading>
-
       <PostPreviewImage src={post.imageUrls.medium} />
-
       <PostPreviewContent>
-        <MarkDownEditor readOnly={true} value={post.body} />
+        <MarkdownEditor readOnly value={post.body} />
       </PostPreviewContent>
     </PostPreviewWrapper>
   );

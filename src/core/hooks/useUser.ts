@@ -1,15 +1,18 @@
 import { useCallback, useState } from "react";
 import { User, UserService } from "t-basilio-sdk";
+import useAuth from "./useAuth";
 
 export default function useUser() {
-  const [user, setUser] = useState<User.Detailed>();
+  const [detailedUser, setDetailedUser] = useState<User.Detailed>();
+  const { user } = useAuth();
 
   const fetchUser = useCallback(async function () {
-    UserService.getDetailedUser(6).then(setUser);
-  }, []);
+    if (user)
+      await UserService.getDetailedUser(user.id).then(setDetailedUser);
+  }, [user]);
 
   return {
-    user,
+    detailedUser,
     fetchUser,
   };
 }

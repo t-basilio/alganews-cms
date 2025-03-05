@@ -1,5 +1,12 @@
+import { useCallback } from "react";
+import useAuth from "../../../core/hooks/useAuth";
 import Button from "../Button/Button";
 import * as SC from "./SessionController.styles";
+import AuthService from "../../../auth/Authorization.service";
+import Skeleton from "react-loading-skeleton";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import confirm from "../../../core/utils/confirm";
 
 export interface SessionControllerProps {
   name: string;
@@ -8,12 +15,28 @@ export interface SessionControllerProps {
 }
 
 function SessionController(props: SessionControllerProps) {
+  const { user } = useAuth();
+
+  const logout = useCallback(() => {
+    confirm({
+      title: "Deseja sair?",
+      onConfirm: AuthService.imperativelySendToLogout,
+    });
+  }, []);
+
+  if (!user) return <Skeleton height={215} />;
+
   return (
     <SC.Wrapper>
-      <SC.Avatar src="https://images.unsplash.com/photo-1601455763557-db1bea8a9a5a?q=80&w=1000&ixlib=rb-1.2.1&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-      <SC.Name> {props.name}</SC.Name>
-      <SC.Description>{props.description}</SC.Description>
-      <Button label="Logout" option="danger" onClick={props.onLougout} />
+      <SC.Avatar src={user.avatarUrls.small} />
+      <SC.Name> {user.name}</SC.Name>
+      <SC.Description>
+        Editor desde{" "}
+        <strong>
+          {format(new Date(user.createdAt), "MMMM 'de' yyyy", { locale: ptBR })}
+        </strong>
+      </SC.Description>
+      <Button label="Logout" option="danger" onClick={logout} />
     </SC.Wrapper>
   );
 }

@@ -1,18 +1,18 @@
-import { useCallback, useState } from "react";
 import { Post, PostService } from "t-basilio-sdk";
-import info from "../../core/utils/info";
+import { useCallback, useState } from "react";
+import info from "../utils/info";
 
-export default function useSinglePost() {
+export default function useSinglePost(postId: number) {
   const [post, setPost] = useState<Post.Detailed>();
   const [loading, setLoading] = useState(false);
 
-  const publishPost = useCallback(async function (postId: number) {
+  const publishPost = useCallback(async () => {
     await PostService.publishExistingPost(postId);
     info({
       title: "Post publicado",
       description: "Você publicou o post com sucesso",
     });
-  }, []);
+  }, [postId]);
 
   const fetchPost = useCallback((postId: number) => {
     setLoading(true);

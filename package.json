@@ -17,7 +17,9 @@
     "chart.js": "2.9.4",
     "date-fns": "^3.6.0",
     "global": "^4.4.0",
+    "jwt-decode": "^4.0.0",
     "markdown-it": "^14.0.0",
+    "pkce-challenge": "^4.1.0",
     "polished": "^4.2.2",
     "react": "^18.2.0",
     "react-chartjs-2": "2.11.1",
@@ -35,7 +37,7 @@
     "react-tag-input": "6.5.2",
     "redux": "^5.0.1",
     "styled-components": "^6.1.8",
-    "t-basilio-sdk": "6.5.0",
+    "t-basilio-sdk": "7.2.0",
     "typescript": "^5.5.4",
     "web-vitals": "^2.1.0"
   },

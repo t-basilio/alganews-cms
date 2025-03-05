@@ -1,4 +1,3 @@
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import { transparentize } from "polished";
@@ -6,10 +5,11 @@ import styled from "styled-components";
 import ProgressBar from "../components/ProgressBar/ProgressBar";
 import FieldDescriptor from "../components/FieldDescriptor/FieldDescriptor";
 import ValueDescriptor from "../components/ValueDescriptor/ValueDescriptor";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams } from "react-router";
-import { getEditorDescription } from "t-basilio-sdk";
+import { getEditorDescription, User } from "t-basilio-sdk";
 import useSingleEditor from "../../core/hooks/useSingleEditor";
+import useAuth from "../../core/hooks/useAuth";
 
 interface EditorProfileProps {
   hidePersonalData?: boolean;
@@ -17,42 +17,42 @@ interface EditorProfileProps {
 
 export default function EditorProfile(props: EditorProfileProps) {
   const params = useParams<{ id: string }>();
+
   const { editor, fetchEditor } = useSingleEditor();
+  const { user } = useAuth();
+
+  const editorsIsAuthenticatedUser = useMemo(
+    () => Number(params.id) === user?.id,
+    [user, params.id]
+  );
+
+  const editorData = useMemo(
+    () => (editorsIsAuthenticatedUser ? user : editor),
+    [editorsIsAuthenticatedUser, user, editor]
+  );
 
   useEffect(() => {
-    fetchEditor(Number(params.id));
-  }, [fetchEditor, params.id]);
-
-  if (!editor)
-    return (
-      <EditorProfileWrapper>
-        <EditorHeadLine>
-          <Skeleton height={48} />
-          <Skeleton height={48} />
-        </EditorHeadLine>
-
-        <EditorFeatures>
-          <Skeleton height={200} />
-          <Skeleton height={200} />
-        </EditorFeatures>
-      </EditorProfileWrapper>
-    );
+    if (!editorsIsAuthenticatedUser) fetchEditor(Number(params.id));
+  }, [fetchEditor, params.id, editorsIsAuthenticatedUser]);
 
   return (
     <EditorProfileWrapper>
       <EditorHeadLine>
-        <Avatar src={editor.avatarUrls.small} />
-        <Name>{editor.name}</Name>
-        <Description>
-          {getEditorDescription(new Date(editor.createdAt))}
-        </Description>
+        <Avatar src={editorData?.avatarUrls.small} />
+        <Name>{editorData?.name}</Name>
+
+        {editorData?.createdAt && (
+          <Description>
+            {getEditorDescription(new Date(editorData.createdAt))}
+          </Description>
+        )}
       </EditorHeadLine>
       <Divisor />
       <EditorFeatures>
         <PersonalInfo>
-          <Biography>{editor.bio}</Biography>
+          {editorData?.bio && <Biography>{editorData?.bio}</Biography>}
           <Skills>
-            {editor.skills?.map((skill) => {
+            {editorData?.skills?.map((skill) => {
               return (
                 <ProgressBar
                   key={skill.name}
@@ -65,59 +65,80 @@ export default function EditorProfile(props: EditorProfileProps) {
           </Skills>
         </PersonalInfo>
         <ContactInfo>
-          <FieldDescriptor field={"Cidade"} value={editor.location.city} />
-          <FieldDescriptor field={"Estado"} value={editor.location.state} />
-          {!props.hidePersonalData && (
-            <>
-              <FieldDescriptor field={"Telefone"} value={"+55 27 99900-9999"} />
-              <FieldDescriptor
-                field={"Email"}
-                value={"ana.castillo@redacao.algacontent.com"}
-              />
-              <FieldDescriptor
-                field={"Nascimento"}
-                value={"26 de Dezembro de 1997 (22 anos)"}
-              />
-            </>
+          {editorData?.location.city && (
+            <FieldDescriptor
+              field={"Cidade"}
+              value={editorData?.location.city}
+            />
+          )}
+          {editorData?.location.state && (
+            <FieldDescriptor
+              field={"Estado"}
+              value={editorData?.location.state}
+            />
+          )}
+
+          {(editorData as User.Detailed)?.phone && (
+            <FieldDescriptor
+              field={"Telefone"}
+              value={(editorData as User.Detailed)?.phone}
+            />
+          )}
+
+          {(editorData as User.Detailed)?.email && (
+            <FieldDescriptor
+              field={"Email"}
+              value={(editorData as User.Detailed)?.email}
+            />
+          )}
+
+          {(editorData as User.Detailed)?.birthdate && (
+            <FieldDescriptor
+              field={"Nascimento"}
+              value={(editorData as User.Detailed)?.birthdate}
+            />
           )}
         </ContactInfo>
       </EditorFeatures>
-      {!props.hidePersonalData && (
-        <EditorEarnings>
-          <ValueDescriptor
-            color={"default"}
-            value={21452}
-            description={"Palavras nesta semana"}
-          />
-          <ValueDescriptor
-            color={"default"}
-            value={123234}
-            description={"Palavras no mês"}
-          />
-          <ValueDescriptor
-            color={"default"}
-            value={12312312}
-            description={"Total de palavras"}
-          />
-          <ValueDescriptor
-            color={"primary"}
-            value={545623.23}
-            description={"Ganhos na semana"}
-            isCurrency
-          />
-          <ValueDescriptor
-            color={"primary"}
-            value={545623.23}
-            description={"Ganhos no mês"}
-            isCurrency
-          />
-          <ValueDescriptor
-            color={"primary"}
-            value={545623.23}
-            description={"Ganhos no total"}
-            isCurrency
-          />
-        </EditorEarnings>
+
+      {(editorData as User.Detailed)?.metrics && (
+        <>
+          <EditorEarnings>
+            <ValueDescriptor
+              color={"default"}
+              value={(editorData as User.Detailed)?.metrics.weeklyWords}
+              description={"Palavras nesta semana"}
+            />
+            <ValueDescriptor
+              color={"default"}
+              value={(editorData as User.Detailed)?.metrics.monthlyWords}
+              description={"Palavras no mês"}
+            />
+            <ValueDescriptor
+              color={"default"}
+              value={(editorData as User.Detailed)?.metrics.lifetimeWords}
+              description={"Total de palavras"}
+            />
+            <ValueDescriptor
+              color={"primary"}
+              value={(editorData as User.Detailed)?.metrics.weeklyEarnings}
+              description={"Ganhos na semana"}
+              isCurrency
+            />
+            <ValueDescriptor
+              color={"primary"}
+              value={(editorData as User.Detailed)?.metrics.monthlyEarnings}
+              description={"Ganhos no mês"}
+              isCurrency
+            />
+            <ValueDescriptor
+              color={"primary"}
+              value={(editorData as User.Detailed)?.metrics.lifetimeEarnings}
+              description={"Ganhos no total"}
+              isCurrency
+            />
+          </EditorEarnings>
+        </>
       )}
     </EditorProfileWrapper>
   );

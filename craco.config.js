@@ -1,4 +1,9 @@
 module.exports = {
+  
+  devServer: {
+    port: 3001
+  },
+
   webpack: {
     configure: (config) => {
       // ...

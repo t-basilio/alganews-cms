@@ -3,39 +3,67 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 import { mdiOpenInNew } from "@mdi/js";
 import Icon from "@mdi/react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Column, usePagination, useTable } from "react-table";
 import Table from "../components/Table/Table";
 import { Post } from "t-basilio-sdk";
 import { format } from "date-fns";
 import Loading from "../components/Loading";
 import PostPreview from "./PostPreview";
-import { modal } from "../../core/utils/modal";
+import modal from "../../core/utils/modal";
 import PostTitleLinkAnchor from "../components/PostTitleLinkAnchor";
 import { usePosts } from "../../core/hooks/usePosts";
+import AuthService from "../../auth/Authorization.service";
 
-
+const BLOG_SERVER_URL = process.env.REACT_APP_BLOG_SERVER_BASE_URL;
 export default function PostList() {
+  const { paginatedPosts, loading, fetchPosts } = usePosts();
+  const [page, setPage] = useState(0);
 
-  const {paginatedPosts, loading, fetchPosts } = usePosts()
-  const [page, setPage] = useState(0)
-  
   useEffect(() => {
-    
     fetchPosts({
       page,
       size: 7,
       showAll: true,
       sort: ["createdAt", "desc"],
-    })      
+    });
   }, [fetchPosts, page]);
+
+  const openInNew = useCallback(async (post: Post.Summary) => {
+    let url = `$/posts/${post.id}/${post.slug}`;
+
+    if (!post.published) {
+      const codeVerifier = AuthService.getCodeVerifier();
+      const refreshToken = AuthService.getRefreshToken();
+
+      if (codeVerifier && refreshToken) {
+        const { access_token } = await AuthService.getNewToken({
+          codeVerifier,
+          refreshToken,
+          scope: 'post:read'
+        });
+
+        url += `${BLOG_SERVER_URL}?token=${access_token}`;
+      }
+    }
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer'
+    a.click();
+  }, []);
 
   const columns = useMemo<Column<Post.Summary>[]>(
     () => [
       {
         Header: "",
         accessor: "id", // accessor is the "key" in the data
-        Cell: () => <Icon path={mdiOpenInNew} size={"14px"} color={"#09f"} />,
+        Cell: ({ row }) => (
+          <span style={{cursor: 'pointer'}} onClick={() => openInNew(row.original)}>
+            <Icon path={mdiOpenInNew} size={"14px"} color={"#09f"} />
+          </span>
+        ),
       },
       {
         Header: () => <div style={{ textAlign: "left" }}>Título</div>,
@@ -48,7 +76,7 @@ export default function PostList() {
               display: "flex",
               gap: 8,
               alignItems: "center",
-              maxWidth: 420
+              maxWidth: 420,
             }}
           >
             <img
@@ -59,10 +87,10 @@ export default function PostList() {
               title={props.row.original.editor.name}
             />
             <PostTitleLinkAnchor
-              title={ props.value }
+              title={props.value}
               href={`/posts/${props.row.original.id}`}
-              onClick={e => {
-                e.preventDefault()
+              onClick={(e) => {
+                e.preventDefault();
                 modal({
                   children: <PostPreview postId={props.row.original.id} />,
                 });
@@ -90,7 +118,7 @@ export default function PostList() {
       {
         id: Math.random().toString(),
         accessor: "published",
-        Header: () => <div style={{ textAlign: "right" }}>Ações</div>,
+        Header: () => <div style={{ textAlign: "right" }}>Status</div>,
         Cell: (props) => (
           <div style={{ textAlign: "right" }}>
             {props.value ? "Publicado" : "Privado"}
@@ -101,13 +129,14 @@ export default function PostList() {
     []
   );
 
-  const instance = useTable<Post.Summary>({
-    data: paginatedPosts?.content || [],
-    columns,
-    manualPagination: true,
-    initialState: { pageIndex: 0 },
-    pageCount: paginatedPosts?.totalPages
-  },
+  const instance = useTable<Post.Summary>(
+    {
+      data: paginatedPosts?.content || [],
+      columns,
+      manualPagination: true,
+      initialState: { pageIndex: 0 },
+      pageCount: paginatedPosts?.totalPages,
+    },
     usePagination
   );
 
@@ -115,7 +144,7 @@ export default function PostList() {
     return (
       <div>
         <Skeleton height={32} />
-        
+
         <Skeleton height={40} />
         <Skeleton height={40} />
         <Skeleton height={40} />
@@ -125,10 +154,10 @@ export default function PostList() {
         <Skeleton height={40} />
       </div>
     );
-  
+
   return (
     <>
-      <Loading show={ loading } />
+      <Loading show={loading} />
       <Table instance={instance} onPaginate={setPage} />
     </>
   );
