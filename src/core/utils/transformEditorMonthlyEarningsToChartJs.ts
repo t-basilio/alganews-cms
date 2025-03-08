@@ -1,6 +1,6 @@
 import { ChartProps } from "../../app/components/Chart/Chart";
 import { Metric } from "t-basilio-sdk";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { ptBR } from 'date-fns/locale'
 
 function transformEditorMonthlyEarningsToChartJs(
@@ -11,7 +11,7 @@ function transformEditorMonthlyEarningsToChartJs(
     const data2: number[] = [];
 
   editorEarnings.forEach(earning => {
-    const formattedMonth = format(new Date(earning.yearMonth), 'MMMM',
+    const formattedMonth = format(parseISO(earning.yearMonth), 'MMMM',
       { locale: ptBR });
 
         labels.push(formattedMonth)

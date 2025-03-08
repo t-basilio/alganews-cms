@@ -1,3 +1,4 @@
+import { Post, PostService } from "t-basilio-sdk";
 import {
   createAction,
   createAsyncThunk,
@@ -6,12 +7,11 @@ import {
   isPending,
   isRejected,
 } from "@reduxjs/toolkit";
-import { Post, PostService } from "t-basilio-sdk";
 
 interface PostSliceState {
   paginated?: Post.Paginated;
   fetching: boolean;
-  counter: number
+  counter: number;
 }
 
 const initialState: PostSliceState = {
@@ -34,7 +34,7 @@ export const fetchPosts = createAsyncThunk(
   }
 );
 
-export const increment = createAction('post/increment')
+export const increment = createAction("post/increment");
 
 export const postReducer = createReducer(initialState, (builder) => {
   builder
@@ -53,5 +53,4 @@ export const postReducer = createReducer(initialState, (builder) => {
     .addMatcher(isRejected, (state) => {
       state.fetching = false;
     });
-})
-
+});

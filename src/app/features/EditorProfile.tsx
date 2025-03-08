@@ -10,6 +10,7 @@ import { useParams } from "react-router";
 import { getEditorDescription, User } from "t-basilio-sdk";
 import useSingleEditor from "../../core/hooks/useSingleEditor";
 import useAuth from "../../core/hooks/useAuth";
+import { format, parseISO } from "date-fns";
 
 interface EditorProfileProps {
   hidePersonalData?: boolean;
@@ -95,7 +96,10 @@ export default function EditorProfile(props: EditorProfileProps) {
           {(editorData as User.Detailed)?.birthdate && (
             <FieldDescriptor
               field={"Nascimento"}
-              value={(editorData as User.Detailed)?.birthdate}
+              value={format(
+                parseISO((editorData as User.Detailed)?.birthdate),
+                "dd/MM/yyy"
+              )}
             />
           )}
         </ContactInfo>

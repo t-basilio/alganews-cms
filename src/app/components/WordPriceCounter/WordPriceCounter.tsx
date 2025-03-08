@@ -12,7 +12,11 @@ function WordPriceCounter(props: WordPriceCounterProps) {
 
   return (
     <WPC.Wrapper>
-      <WPC.WordCounter>{props.wordsCount} palavras</WPC.WordCounter>
+      <WPC.WordCounter>
+        {props.wordsCount === 1
+          ? `${props.wordsCount} palavra`
+          : `${props.wordsCount} palavras`}
+      </WPC.WordCounter>
       <WPC.PricePreview>
         {(props.wordsCount * props.pricePerWord).toLocaleString("pt-br", {
           style: "currency",

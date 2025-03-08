@@ -4,7 +4,7 @@ import Button from "../Button/Button";
 import * as SC from "./SessionController.styles";
 import AuthService from "../../../auth/Authorization.service";
 import Skeleton from "react-loading-skeleton";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import confirm from "../../../core/utils/confirm";
 
@@ -33,7 +33,7 @@ function SessionController(props: SessionControllerProps) {
       <SC.Description>
         Editor desde{" "}
         <strong>
-          {format(new Date(user.createdAt), "MMMM 'de' yyyy", { locale: ptBR })}
+          {format(parseISO(user.createdAt), "MMMM 'de' yyyy", { locale: ptBR })}
         </strong>
       </SC.Description>
       <Button label="Logout" option="danger" onClick={logout} />

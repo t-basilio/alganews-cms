@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Column, usePagination, useTable } from "react-table";
 import Table from "../components/Table/Table";
 import { Post } from "t-basilio-sdk";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import Loading from "../components/Loading";
 import PostPreview from "./PostPreview";
 import modal from "../../core/utils/modal";
@@ -111,7 +111,7 @@ export default function PostList() {
               fontFamily: '"Roboto mono", monospace',
             }}
           >
-            {format(new Date(props.value), "dd/MM/yyyy")}
+            {format(parseISO(props.value), "dd/MM/yyyy")}
           </div>
         ),
       },
